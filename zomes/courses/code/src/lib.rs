@@ -51,5 +51,14 @@ mod my_zome {
     }
 
     // Homework: add the get_course and delete_course endpoints
+    #[zome_fn("hc_public")]
+    fn get_course(course_address: Address) -> ZomeApiResult<Option<Entry>> {
+        course::get_course(course_address)
+    }
+
+    #[zome_fn("hc_public")]
+    fn delete_course(course_address: Address) -> ZomeApiResult<Address> {
+        course::delete_course(course_address)
+    }
 
 }

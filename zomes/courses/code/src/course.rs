@@ -17,12 +17,18 @@ pub fn entry_definition() -> ValidatingEntryType {
         validation_package: || {
             hdk::ValidationPackageDefinition::Entry
         },
-        validation: | _validation_data: hdk::EntryValidationData<Course>| {
-            match _validation_data {
+        validation: | validation_data: hdk::EntryValidationData<Course>| {
+            match validation_data {
                 // Replace ".." with "entry, .."
-                EntryValidationData::Create { .. } => {
+                EntryValidationData::Create { entry,.. } => {
                     // Homework: add a validation rule that the title can only contain 50 chars or less
-                    Ok(())
+                    if entry.title.len() <= 50 {
+                        Ok(())
+                    }
+                    else {
+                        Err("Test".into())
+                    }
+
                 },
                 _ => Ok(())
             }
@@ -30,28 +36,28 @@ pub fn entry_definition() -> ValidatingEntryType {
     )
 }
 
-pub fn create(_title: String, _timestamp: u64) -> ZomeApiResult<Address> {
-    let _teacher_address = AGENT_ADDRESS.clone();
-
+pub fn create(title: String, timestamp: u64) -> ZomeApiResult<Address> {
+    let teacher_address = AGENT_ADDRESS.clone();
     // Homework: finish the create course zome call
-/* 
-    let entry = Entry::App("my_entry".into(), entry.into());
+    let entry = Course {
+        title,
+        teacher_address,
+        modules: Vec::new(),
+        timestamp,
+    };
+    let entry = Entry::App("course".into(), entry.into());
     let address = hdk::commit_entry(&entry)?;
-    Ok(address) */
-
-    Err(ZomeApiError::from(String::from("Do your homework please")))
+    Ok(address)
 }
 
-pub fn get_course(_course_address: Address) -> ZomeApiResult<Option<Entry>> {
+pub fn get_course(course_address: Address) -> ZomeApiResult<Option<Entry>> {
     // Homework: finish the get course call
     // Hint: use hdk::get_entry
-
-    Err(ZomeApiError::from(String::from("Do your homework please")))
+    hdk::get_entry(&course_address)
 }
 
-pub fn delete_course(_course_address: Address) -> ZomeApiResult<Address> {
+pub fn delete_course(course_address: Address) -> ZomeApiResult<Address> {
     // Homework: finish the delete course call
     // Hint: use hdk::remove_entry
-
-    Err(ZomeApiError::from(String::from("Do your homework please")))
+    hdk::remove_entry(&course_address)
 }
